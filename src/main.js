@@ -20,10 +20,10 @@ app.use(express.static(publicRoot));
 
 
 const products = new Container('./src/db/products.txt');
-const messages = new Container('./src/db/mensajes.txt');
+const messages = new Container('./src/db/messages.txt');
 
 app.get('/', (req, res) => {
-    res.send('index.html', {root: publicRoot});
+    res.send('index.html', { root: publicRoot });
 });
 
 
@@ -39,14 +39,13 @@ server.on('error', error => console.log(`Error: ${error}`));
 io.on('connection', async(socket) => {
     console.log('New client connected!');
 
-    const productsList = products.getAll();
+    const productsList = await products.getAll();
     socket.emit('new-connection', productsList);
 
     socket.on('new-product', (data) =>{
         products.save(data);
-        const newProductsList = products.getAll();
-        io.socket.emit('product', newProductsList);
-    })
+        io.sockets.emit('product', data);
+    });
 
     const messagesList = await messages.getAll();
     socket.emit('messages', messagesList);
@@ -56,5 +55,5 @@ io.on('connection', async(socket) => {
         await messages.save(data);
         const messagesList = await messages.getAll();
         io.sockets.emit('messages', messagesList);
-      });
+    });
 });

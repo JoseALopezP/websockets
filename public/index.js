@@ -38,3 +38,29 @@ function addProduct(element) {
     socket.emit('new-product', product);
     return false;
 }
+
+function render(data) {
+    const html = data.map((element) => {
+        return(`
+            <div style="color: brown">
+            <strong style="color: blue">${element.email}</strong> [${element.time}] :
+            <em style="color: green">${element.text}</em> </div>
+            `)
+    }).join(" ");
+    document.getElementById('messagesList').innerHTML = html;
+  }
+
+socket.on('messages', function(data) { render(data); });
+
+function addMessage(e){
+    const message = {
+        email: document.getElementById('email').value,
+        text: document.getElementById('text').value
+    };
+    if (message.email) {
+      socket.emit('new-message', message);
+    } else {
+      alert('Please, introduce email');
+    }
+    return false;
+}

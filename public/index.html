@@ -9,18 +9,19 @@
   <title>Document</title>
 </head>
 <body>
-  <div>
+<div class="addProductFormBlock">
     <h2>Products</h2>
     <form onsubmit="return addProduct(this)">
-      <label for="title">Title:</label><br>
-      <input type="text" id="title" name="title"><br>
-      <label for="price">Price:</label><br>
-      <input type="text" id="price" name="price"><br>
-      <label for="thumbnail">Thumbnail:</label><br>
-      <input type="text" id="thumbnail" name="thumbnail">
-      <input type="submit" value="Upload">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="price">Price:</label><br>
+        <input type="text" id="price" name="price"><br>
+        <label for="thumbnail">Thumbnail:</label><br>
+        <input type="text" id="thumbnail" name="thumbnail">
+        <input type="submit" value="Upload">
     </form>
-  </div>
+</div>
+<div class="productsListBlock">
     <h2>Products list</h2>
     <table id="productsListTable">
         <tr>
@@ -28,6 +29,21 @@
         <th>Price</th>
         <th>Thumbnail</th>
         </tr>
+        <!-- Rendering -->
     </table>
+</div>
+<div class="messagesBlock">
+    <h2>Message Center</h2>
+    <div class="addMessageBlock">
+        <form onsubmit="return addMessage(this)">
+            <input type="email" id="email" placeholder="email" >
+            <input type="text" id="texto" placeholder="Hi...">
+            <input type="submit" value="Send">
+        </form>
+    </div>
+    <div id="messagesList" class="messagesList">
+        <!-- Rendering -->
+    </div>
+</div>
 </body>
 </html>

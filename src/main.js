@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const app = express();
 const Container = require('./container/containerFs.js');
 const {Server: HttpServer} = require('http');
@@ -19,7 +20,7 @@ app.use(express.static(publicRoot));
 
 
 const products = new Container('./src/db/products.txt');
-
+const messages = new Container('./src/db/mensajes.txt');
 
 app.get('/', (req, res) => {
     res.send('index.html', {root: publicRoot});
@@ -34,15 +35,26 @@ const server = httpServer.listen(port, () => {
 
 server.on('error', error => console.log(`Error: ${error}`));
 
-io.on('connection', (socket) => {
+
+io.on('connection', async(socket) => {
     console.log('New client connected!');
 
     const productsList = products.getAll();
-    socket.emit('product', productsList);
+    socket.emit('new-connection', productsList);
 
     socket.on('new-product', (data) =>{
         products.save(data);
         const newProductsList = products.getAll();
         io.socket.emit('product', newProductsList);
     })
-})
+
+    const messagesList = await messages.getAll();
+    socket.emit('messages', messagesList);
+
+    socket.on('new-message', async data => {
+        data.time = moment(new Date()).format('DD/MM/YYYY hh:mm:ss');
+        await messages.save(data);
+        const messagesList = await messages.getAll();
+        io.sockets.emit('messages', messagesList);
+      });
+});
